@@ -1,17 +1,35 @@
-# custos-youtube-agent
+# CUSTOS-Governed Social Distribution Agent
 
-A CUSTOS-governed agent for YouTube channel operations. Every action the agent
-drafts must pass three gates before it touches the channel:
+A governed distribution agent for social media platforms. Every action the agent
+drafts must pass three gates before it touches any platform:
 
 ```
 draft action -> CUSTOS policy gate (fail-closed) -> HUMAN approval -> execute -> hash-chained audit
 ```
 
 **Status: pre-alpha scaffold.** The governed pattern is implemented and tested
-(policy gate, approval flow, audit chain). YouTube Data API execution is
-intentionally BLOCKED until owner OAuth credentials are connected — the executor
-refuses to act without credentials, and the gate refuses to proceed without a
-live CUSTOS decision. No action is ever taken autonomously.
+(policy gate, approval flow, audit chain). Platform execution is intentionally
+BLOCKED until owner OAuth credentials are connected — the executor refuses to
+act without credentials, and the gate refuses to proceed without a live CUSTOS
+decision. No action is ever taken autonomously.
+
+## Platforms
+
+The core (gate, approver, audit, pipeline) is platform-agnostic. Each platform
+integrates as an executor adapter implementing the same contract (see
+[ADAPTERS.md](ADAPTERS.md)):
+
+| Platform | Adapter status |
+| --- | --- |
+| YouTube | Scaffolded — executor stubbed, execution blocked pending owner OAuth |
+| TikTok | Roadmap — not built |
+| Instagram | Roadmap — not built |
+| X | Roadmap — not built |
+| Facebook | Roadmap — not built |
+| LinkedIn | Roadmap — not built |
+
+Adapter status must never be overstated: **no platform adapter executes anything
+today.**
 
 ## Governance rules
 
@@ -31,9 +49,9 @@ export CUSTOS_URL=http://localhost:8000   # your CUSTOS-CORE /v1/evaluate
 export CUSTOS_JWT=<tenant-jwt>            # tenant token
 ```
 
-Execution requires YouTube OAuth credentials (scopes: `youtube.readonly`,
-`youtube.force-ssl`, `yt-analytics.readonly`) — connect them in
-`custos_yt_agent/executor.py` once authorized.
+Execution requires per-platform OAuth credentials (e.g. YouTube scopes:
+`youtube.readonly`, `youtube.force-ssl`, `yt-analytics.readonly`) — connect them
+in the executor once authorized.
 
 ## License
 
