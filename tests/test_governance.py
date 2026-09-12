@@ -47,7 +47,7 @@ def test_pipeline_blocked_at_executor_records_full_trail(tmp_path):
         gate=AllowGate(), chain=chain, approve=lambda a: True,
     )
     assert outcome["status"] == "blocked"  # ALLOW + approved, but executor refuses without creds
-    events = [json.loads(l)["event"] for l in open(tmp_path / "a.jsonl")]
+    events = [json.loads(line)["event"] for line in open(tmp_path / "a.jsonl")]
     assert events == ["drafted", "allowed", "approved", "blocked"]
     assert chain.verify() is True
 
@@ -59,7 +59,8 @@ def test_audit_chain_detects_tampering(tmp_path):
     chain.record({"event": "allowed"})
     assert chain.verify() is True
     lines = open(path).read().splitlines()
-    entry = json.loads(lines[0]); entry["event"] = "executed"  # tamper
+    entry = json.loads(lines[0])
+    entry["event"] = "executed"  # tamper
     lines[0] = json.dumps(entry, sort_keys=True)
     open(path, "w").write("\n".join(lines) + "\n")
     assert AuditChain(path).verify() is False
@@ -72,5 +73,5 @@ def test_pipeline_never_executes_when_human_rejects(tmp_path):
         gate=AllowGate(), chain=chain, approve=lambda a: False,
     )
     assert outcome["status"] == "rejected"
-    events = [json.loads(l)["event"] for l in open(tmp_path / "a.jsonl")]
+    events = [json.loads(line)["event"] for line in open(tmp_path / "a.jsonl")]
     assert "blocked" not in events and "approved" not in events
