@@ -5,17 +5,17 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import pytest
 
-from custos_yt_agent.audit import AuditChain
-from custos_yt_agent.gate import CUSTOSGate
-from custos_yt_agent.models import ActionKind, YouTubeAction
-from custos_yt_agent.pipeline import run_action
+from custos_distribution_agent.audit import AuditChain
+from custos_distribution_agent.gate import CUSTOSGate
+from custos_distribution_agent.models import ActionKind, YouTubeAction
+from custos_distribution_agent.pipeline import run_action
 
 ALLOW_BODY = {
     "allowed": True,
     "action": "upload",
     "triggered_rule": None,
     "reason": "No policy violations detected",
-    "client_id": "youtube-agent",
+    "client_id": "distribution-agent",
     "tenant_id": "probe_tenant",
     "audit_record_hash": "a" * 64,
     "trace_id": "trace-42",

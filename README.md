@@ -1,7 +1,10 @@
 # CUSTOS-Governed Social Distribution Agent
 
-A governed distribution agent for social media platforms. Every action the agent
-drafts must pass three gates before it touches any platform:
+A governed distribution agent for social media platforms. YouTube is the first
+channel adapter, not the subject: the effect this agent performs is publishing
+content and replies to platforms it does not own, which is the class the gate
+governs. Every action the agent drafts must pass three gates before it touches
+any platform:
 
 ```
 draft action -> CUSTOS policy gate (fail-closed) -> HUMAN approval -> execute -> hash-chained audit
@@ -78,7 +81,7 @@ export CUSTOS_JWT=<tenant-jwt>            # tenant token
 
 Execution requires per-platform OAuth credentials (e.g. YouTube scopes:
 `youtube.readonly`, `youtube.force-ssl`, `yt-analytics.readonly`) — connect them
-in the executor once authorized.
+in `custos_distribution_agent/executor.py` once authorized.
 
 ## License
 

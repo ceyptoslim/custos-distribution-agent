@@ -53,7 +53,7 @@ class CUSTOSGate:
     # -- request building -------------------------------------------------
     def _payload(self, action: YouTubeAction) -> bytes:
         return json.dumps({
-            "client_id": os.environ.get("CUSTOS_CLIENT_ID", "youtube-agent"),
+            "client_id": os.environ.get("CUSTOS_CLIENT_ID", "distribution-agent"),
             "action": action.kind.value,
             "resource": f"youtube:video:{action.video_id}" if action.video_id else "youtube:channel",
             "metadata": action.payload,
