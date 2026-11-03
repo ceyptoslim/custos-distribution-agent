@@ -1,7 +1,10 @@
 # CUSTOS-Governed Social Distribution Agent
 
-A governed distribution agent for social media platforms. Every action the agent
-drafts must pass three gates before it touches any platform:
+A governed distribution agent for social media platforms. YouTube is the first
+channel adapter, not the subject: the effect this agent performs is publishing
+content and replies to platforms it does not own, which is the class the gate
+governs. Every action the agent drafts must pass three gates before it touches
+any platform:
 
 ```
 draft action -> CUSTOS policy gate (fail-closed) -> HUMAN approval -> execute -> hash-chained audit
@@ -41,6 +44,33 @@ today.**
    rejected, blocked, executed) is appended to a tamper-evident chain
    (`audit_log.jsonl`), mirroring the CUSTOS-CORE audit design.
 
+## What this proves, and what it does not
+
+The gate decides; this process performs the effect. That is a **governed**
+agent, not an enforced one, and the distinction belongs at the top rather than
+in a footnote: nothing here prevents an action that skips the gate, because the
+code that would skip it is the code doing the acting.
+
+What it does establish: every action that *does* pass through the pipeline
+carries the `trace_id` and `audit_record_hash` of the CUSTOS decision that
+allowed it, written next to the local log line. So the local chain is not a
+standalone claim about what happened; each entry points at a record CUSTOS holds
+in its own hash-chained store, and a reader can follow one action from one ledger
+into the other. Evidence worth having if the local log is ever questioned, which
+is why the join matters more than the local hash chain alone.
+
+Enforcement in the strong sense requires the call itself to be forwarded by the
+gate (the `/v1/execute` assembly in CUSTOS Enterprise), so that no execution
+path exists which skips it. Until this agent runs through that, treat its
+records as joined evidence, not as proof of mediation.
+
+## Client contract
+
+`CUSTOSGate` sends `X-CUSTOS-Version` on every request and takes the value from
+`CUSTOS_API_VERSION`, defaulting to the release it was written against. It is
+deliberately not hardcoded in the call site: a stale version in a client makes
+server-side logs lie about which contract produced a request.
+
 ## Setup
 
 ```bash
@@ -51,7 +81,7 @@ export CUSTOS_JWT=<tenant-jwt>            # tenant token
 
 Execution requires per-platform OAuth credentials (e.g. YouTube scopes:
 `youtube.readonly`, `youtube.force-ssl`, `yt-analytics.readonly`) — connect them
-in the executor once authorized.
+in `custos_distribution_agent/executor.py` once authorized.
 
 ## License
 

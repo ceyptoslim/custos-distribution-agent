@@ -1,11 +1,11 @@
 """Governance invariants: fail-closed gate, tamper-evident audit, blocked executor."""
 import json
 
-from custos_yt_agent.audit import AuditChain
-from custos_yt_agent.executor import YouTubeExecutor
-from custos_yt_agent.gate import CUSTOSGate
-from custos_yt_agent.models import ActionKind, YouTubeAction
-from custos_yt_agent.pipeline import run_action
+from custos_distribution_agent.audit import AuditChain
+from custos_distribution_agent.executor import YouTubeExecutor
+from custos_distribution_agent.gate import CUSTOSGate
+from custos_distribution_agent.models import ActionKind, YouTubeAction
+from custos_distribution_agent.pipeline import run_action
 
 
 class DeadGate(CUSTOSGate):
