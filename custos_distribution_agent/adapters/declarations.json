@@ -1,0 +1,131 @@
+{
+  "schema": 2,
+  "deny_by_default": true,
+  "about": "Every platform adapter declares itself here before an executor exists. Effect class and reversibility belong to the action, not the platform: an unlisted upload and a public reply come from the same adapter and are not the same kind of act. Order is activation order, cheapest-to-undo first; the registry refuses a file whose order contradicts its own risk ranking.",
+  "platforms": [
+    {
+      "platform": "youtube",
+      "status": "stub",
+      "adapter": "YouTubeExecutor",
+      "required_scopes": [
+        "https://www.googleapis.com/auth/youtube.force-ssl"
+      ],
+      "quota_ceiling_per_day": 6,
+      "human_approval_required": true,
+      "tests": "tests/test_governance.py",
+      "notes": "First adapter: two of its five actions are revocable, so it is the right place to prove one real outbound action end to end. Executor refuses without owner OAuth credentials. Enabled today: the three reversible actions only. reply_comment and moderate_comment are declared but disabled until a reversible action has actually run end to end.",
+      "actions": [
+        {
+          "name": "upload_video:unlisted",
+          "kind": "upload",
+          "effect_class": "publish_semi_public",
+          "reversibility": "reversible",
+          "notes": "Deliberately narrowed: only unlisted uploads are declared. A public upload is not in the allowlist and has to be added by editing this file.",
+          "enabled": true
+        },
+        {
+          "name": "update_metadata",
+          "kind": "update_metadata",
+          "effect_class": "modify_own_asset",
+          "reversibility": "reversible",
+          "enabled": true
+        },
+        {
+          "name": "add_to_playlist",
+          "kind": "add_to_playlist",
+          "effect_class": "modify_own_asset",
+          "reversibility": "reversible",
+          "enabled": true
+        },
+        {
+          "name": "reply_comment",
+          "kind": "reply_comment",
+          "effect_class": "publish_public",
+          "reversibility": "irreversible",
+          "notes": "A reply is visible to third parties the moment it posts. Deleting it afterwards does not unread it, which is why the action carries the harder class rather than the adapter.",
+          "enabled": false
+        },
+        {
+          "name": "moderate_comment",
+          "kind": "moderate_comment",
+          "effect_class": "delete_own_asset",
+          "reversibility": "irreversible",
+          "notes": "Holding or removing someone else's comment cannot be undone from their side of the exchange.",
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "platform": "newsletter",
+      "status": "declared",
+      "adapter": null,
+      "required_scopes": [],
+      "quota_ceiling_per_day": 1,
+      "human_approval_required": true,
+      "tests": null,
+      "notes": "Own domain, but delivery cannot be recalled once it leaves. Declared only: no executor, and nothing is allowlisted until one exists.",
+      "actions": [
+        {
+          "name": "send_issue",
+          "effect_class": "direct_message",
+          "reversibility": "irreversible",
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "platform": "x",
+      "status": "declared",
+      "adapter": null,
+      "required_scopes": [],
+      "quota_ceiling_per_day": 2,
+      "human_approval_required": true,
+      "tests": null,
+      "notes": "Paid API tier with a per-post cost, so the quota ceiling is declared before the executor.",
+      "actions": [
+        {
+          "name": "post",
+          "effect_class": "publish_public",
+          "reversibility": "irreversible",
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "platform": "tiktok",
+      "status": "declared",
+      "adapter": null,
+      "required_scopes": [],
+      "quota_ceiling_per_day": 1,
+      "human_approval_required": true,
+      "tests": null,
+      "notes": "Direct post requires platform app approval before the endpoint is usable, so this entry documents a gate we cannot yet cross.",
+      "actions": [
+        {
+          "name": "post_video",
+          "effect_class": "publish_public",
+          "reversibility": "irreversible",
+          "enabled": false
+        }
+      ]
+    },
+    {
+      "platform": "instagram",
+      "status": "declared",
+      "adapter": null,
+      "required_scopes": [],
+      "quota_ceiling_per_day": 1,
+      "human_approval_required": true,
+      "tests": null,
+      "notes": "Requires a business account and app review. Last in order because the effect is public and permanent and the credential path is the longest.",
+      "actions": [
+        {
+          "name": "post_media",
+          "effect_class": "publish_public",
+          "reversibility": "irreversible",
+          "enabled": false
+        }
+      ]
+    }
+  ]
+}

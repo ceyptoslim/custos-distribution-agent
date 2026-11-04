@@ -48,7 +48,9 @@ def test_pipeline_blocked_at_executor_records_full_trail(tmp_path):
     )
     assert outcome["status"] == "blocked"  # ALLOW + approved, but executor refuses without creds
     events = [json.loads(line)["event"] for line in open(tmp_path / "a.jsonl")]
-    assert events == ["drafted", "allowed", "approved", "blocked"]
+    # "declared" is new: the adapter registry is consulted before the gate, and
+    # recording that it was keeps the trail honest about who refused what.
+    assert events == ["drafted", "declared", "allowed", "approved", "blocked"]
     assert chain.verify() is True
 
 
