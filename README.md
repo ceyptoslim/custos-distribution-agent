@@ -85,4 +85,6 @@ in `custos_distribution_agent/executor.py` once authorized.
 
 ## License
 
-AGPL-3.0 (uniform with CUSTOS-CORE).
+AGPL-3.0 (uniform with CUSTOS-CORE). Copyright (c) 2026 Tavares Heath Sr.
+(doing business as FroLife Productions). See `NOTICE.md` for the rights holder
+statement.
